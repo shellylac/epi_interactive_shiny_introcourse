@@ -1,6 +1,6 @@
 #
-# This is the server logic of a Shiny web application. You can run the
-# application by clicking 'Run App' above.
+# This is the user-interface definition of a Shiny web application. You can
+# run the application by clicking 'Run App' above.
 #
 # Find out more about building applications with Shiny here:
 #
@@ -9,24 +9,28 @@
 
 library(shiny)
 
-# Define server logic required to draw a histogram
-function(input, output, session) {
+# Define UI for application that draws a histogram
+fluidPage(
   
-  output$distPlot <- renderPlot({
-    
-    # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2]
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
-    
-    # draw the histogram with the specified number of bins
-    hist(x, 
-         breaks = bins, 
-         col = 'blue', 
-         border = 'white',
-         xlab = 'Time between eruptions (in mins)',
-         ylab = 'Frequency',
-         main = 'Waiting time histogram')
-    
-  })
+  # Application title
+  titlePanel("Histogram of Old Faithful Geyser Data"),
   
-}
+  # Sidebar with a slider input for number of bins
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("bins",
+                  "How many bins would you like?",
+                  min = 1,
+                  max = 50,
+                  #value = c(10,40), # gives a double ended slider - not useful here
+                  value = 10,
+                  width = '50%')
+    ),
+    
+    # Show a plot of the generated distribution
+    mainPanel(
+      plotOutput("distPlot")
+    ),
+    position = "right"
+  )
+)
